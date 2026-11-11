@@ -1,0 +1,18 @@
+# Normalise line endings: text files are stored with LF in the repository.
+* text=auto eol=lf
+
+# Windows scripts need CRLF when checked out.
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Never touch binaries.
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+*.woff2 binary
+*.sqlite3 binary
+
+# Piece sets are third-party assets: keep them out of language statistics.
+web/pieces/** linguist-vendored

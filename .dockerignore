@@ -1,0 +1,41 @@
+# Keep the build context (and therefore the image) free of everything that is
+# not needed at runtime.
+.git
+.gitignore
+.gitattributes
+.github
+.dockerignore
+Dockerfile
+docker-compose.yml
+
+# Secrets and local state
+.env
+.env.*
+!.env.example
+data/
+*.sqlite3
+*.sqlite3-*
+*.db
+*.log
+
+# Development artefacts
+tests/
+docs/
+scripts/
+*.md
+requirements-dev.txt
+pyproject.toml
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

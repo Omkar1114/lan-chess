@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Lint and test (Python ${{ matrix.python }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+          cache-dependency-path: requirements*.txt
+
+      - name: Install Stockfish (enables the engine tests)
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends stockfish
+
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Lint (Ruff)
+        run: |
+          ruff check .
+          ruff format --check .
+
+      - name: Syntax-check the frontend
+        run: |
+          for file in web/js/*.js web/js/views/*.js; do
+            cp "$file" /tmp/check.mjs && node --check /tmp/check.mjs
+          done
+
+      - name: Run the test suite
+        run: pytest -v
+
+  docker:
+    name: Docker image builds and starts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build the image
+        run: docker compose build
+
+      - name: Start the stack and wait until it is healthy
+        run: |
+          cp .env.example .env
+          docker compose up -d --wait --wait-timeout 90
+
+      - name: Smoke test
+        run: |
+          curl --fail --silent http://localhost:8080/api/health
+          curl --fail --silent http://localhost:8080/api/config | grep -q '"engine_available":true'
+          curl --fail --silent --output /dev/null http://localhost:8080/
+
+      - name: Logs
+        if: always()
+        run: docker compose logs
+
+      - name: Stop
+        if: always()
+        run: docker compose down -v

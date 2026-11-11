@@ -1,0 +1,37 @@
+# One container holds everything: web server (API + WebSockets + static
+# frontend), the embedded SQLite database and the Stockfish engine.
+#
+#   cp .env.example .env && docker compose up -d
+
+name: lan-chess
+
+services:
+  chess:
+    build: .
+    image: lan-chess:latest
+    container_name: lan-chess
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: false # sensible defaults apply when .env is missing
+    environment:
+      # Fixed inside the container; change HOST_PORT to move the published port.
+      APP_HOST: 0.0.0.0
+      APP_PORT: "8080"
+      DATA_DIR: /data
+    ports:
+      # 0.0.0.0 = reachable from every device on the LAN.
+      - "${HOST_BIND:-0.0.0.0}:${HOST_PORT:-8080}:8080"
+    volumes:
+      - lanchess-data:/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/api/health', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  # Database, generated secret key - everything that must survive rebuilds.
+  lanchess-data:
+    name: lanchess-data
