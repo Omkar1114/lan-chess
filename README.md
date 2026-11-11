@@ -27,8 +27,6 @@ someone else's service, no app to install.**
 
 ## Screenshots
 
-> Placeholders — add your own images to [`docs/screenshots/`](docs/screenshots/) with these names.
-
 | Lobby | Live game | Analysis board |
 | ----- | --------- | -------------- |
 | ![Lobby](docs/screenshots/lobby.png) | ![Game](docs/screenshots/game.png) | ![Analysis](docs/screenshots/analysis.png) |
