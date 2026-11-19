@@ -186,7 +186,7 @@ export class Board {
       document.body.append(drag.ghost);
       this.root.querySelector(`[data-sq="${drag.from}"] .piece`)?.classList.add("dragging");
     }
-    drag.ghost.style.transform = `translate(${event.clientX}px, ${event.clientY}px) translate(-50%, -50%)`;
+    drag.ghost.style.transform = `translate(${event.clientX}px, ${event.clientY}px) translate(-50%, -50%) scale(1.15)`;
   }
 
   onPointerUp(event) {

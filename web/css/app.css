@@ -161,7 +161,7 @@ table.games td { padding: .5rem .6rem; border-top: 1px solid var(--border); }
 .piece.dragging { opacity: .3; }
 .drag-piece {
   position: fixed; left: 0; top: 0; z-index: 100; pointer-events: none;
-  background-size: 100% 100%; filter: drop-shadow(0 6px 8px rgba(0, 0, 0, .5)); scale: 1.15;
+  background-size: 100% 100%; filter: drop-shadow(0 6px 8px rgba(0, 0, 0, .5));
 }
 .hint { position: absolute; inset: 0; z-index: 3; pointer-events: none; background: radial-gradient(circle, rgba(20, 85, 30, .5) 19%, transparent 21%); }
 .hint.capture { background: radial-gradient(circle, transparent 0 68%, rgba(20, 85, 30, .5) 70% 82%, transparent 84%); }
